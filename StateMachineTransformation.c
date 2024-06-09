@@ -21,6 +21,17 @@ int addmod(int m,int n){
     return ret;
 }
 
+int mulmod(int m,int n)
+{
+	if((m==0)||(n==0)) return 0;
+	if(m<=(INT_MAX/n)) return (m*n)%mod;
+	if(Abs(m-mod)<m) m -= mod;
+	if(Abs(n-mod)<n) n -= mod;
+	int ret = (1ll*m*n)%mod;
+	if(ret<0) ret += mod;
+	return ret;
+}
+
 int checkRecord(int n){
     if(n==1) return 3;
     int ans=0,i=0;
