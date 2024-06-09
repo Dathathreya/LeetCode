@@ -1,7 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <assert.h>
 
 const int mod = (int)1e9+7;
-int count[1000001],L[3];
-
+int count[100001],L[3];
+int max(int m,int n){ return (m>=n)?(m):(n);}
+int min(int m,int n){ return (m<=n)?(m):(n);}
+int f(int x){return (x!=0)?(x):(1); }
 int Abs(int x){return (x>0)?(x):(-x);}
 
 int addmod(int a,int b){
@@ -17,6 +23,9 @@ int addmod(int a,int b){
 }
 
 int mulmod(int a,int b){
+	if((a==0)||(b==0)){
+		return 0;
+	}
 	if(a<=(INT_MAX/b)){
 		return (a*b)%mod;
 	}
@@ -49,18 +58,18 @@ int checkRecord(int n){
 		L[1] = new_L1;
 		L[2] = new_L2;
 	}
-    count[0]=1;
+
 	for(i=0;i<=n-1-i;i++){
 		if(i!=n-1-i){
 			int pdt =1;
-			pdt = mulmod(2,count[i]);
-			pdt = mulmod(pdt,count[n-1-i]);
+			pdt = mulmod(2,f(count[i]));
+			pdt = mulmod(pdt,f(count[n-1-i]));
 			ans = addmod(ans,pdt);
 		}
 		else{
 			int pdt =1;
-			pdt = mulmod(1,count[i]);
-			pdt = mulmod(pdt,count[n-1-i]);
+			pdt = mulmod(1,f(count[i]));
+			pdt = mulmod(pdt,f(count[n-1-i]));
 			ans = addmod(ans,pdt);
 		}
 	}
@@ -68,6 +77,7 @@ int checkRecord(int n){
 	//printf("\n");
 	return ans;
 }
+
 void solve(){
 	int n;
 	assert(fscanf(stdin,"%d",&n)>0);
