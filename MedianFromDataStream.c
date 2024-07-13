@@ -1,3 +1,11 @@
+
+// https://leetcode.com/problems/find-median-from-data-stream/description/
+// code approach 
+// take sorted array visualize the median in it , in even or odd number first median is always greater than remaining part of its previous values so we make this as largest in a maxheap
+// in a same way if we read second median for a even sized list from the end its the least number found in the list so we put this in a mini heap
+// in above example first and second median are same for odd sized list. 
+// later we do balancing to make sure max heap and mini heap have half the size of list in each of them with minor variance of 1 in case of odd
+
 typedef struct {
     int mxheap[50071],mnheap[50071],mxh_sz,mnh_sz;    
 } MedianFinder;
