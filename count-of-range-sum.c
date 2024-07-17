@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <assert.h>
 typedef int  comp_self_t(const char* arr,int f,int s);
 typedef void swap_self_t(const char* arr,int f,int s);
 typedef  long long int lli;
@@ -32,31 +34,32 @@ int inrange(lli x,int li,int hi){
     return ((x>=li)&&(x<=hi));
 }
 
-int max(int a,int b){ return ((a>=b)?(a):(b));}
-int min(int a,int b){ return ((a<=b)?(a):(b));}
+int max(int a,int b){return ((a>=b)?(a):(b)); }
+int min(int a,int b){return ((a>=b)?(a):(b)); }
 
 void merger(lli* arr,int low,int mid,int high,int li,int hi){
     
-    int Start2=mid+1,gleast=mid,ghighest=mid;
-    while(Start2<=high){
+    int Start1=mid,End1=mid,Start2=mid+1;
+    while(Start2 <= high){
         int im_cnt=0;
-        while((ghighest>=low)&&(suffix[ghighest]+prefix[Start2]>hi)){
-            ghighest--;
+        while((End1>=low)&&(suffix[End1]+prefix[Start2]>hi)){
+            End1--;
         }
-        
-        ghighest = max(ghighest,low);
-        gleast   = min(gleast,ghighest);
-        int last_correct_glast = gleast;
+        /*avoid out of range or abnormal anomalies*/
+        End1   = max(End1,low); // setting up correct value at End1 - OOR
+        Start1 = min(End1,Start1);// Skiping Part 
+        int last_set_Start1 = Start1;
         im_cnt = 0;
-        while((gleast>=low)&&(suffix[gleast]+prefix[Start2]>=li)&&(suffix[ghighest]+prefix[Start2]<=hi)){
-            im_cnt = (ghighest-gleast+1);
-            last_correct_glast = gleast; 
-            gleast--;
+        while((Start1>=low)&&(suffix[Start1]+prefix[Start2]>=li)&&(suffix[End1]+prefix[Start2]<=hi)){
+            im_cnt = (End1-Start1+1);    
+            last_set_Start1 = Start1;
+            Start1--;
         }
-        gleast = max(last_correct_glast,gleast); // reseting lower_range_value
-        count += im_cnt;
+        count += im_cnt ; 
+        Start1=max(last_set_Start1,Start1); // resetting Start1 using last_set_Start1
         Start2++;
     }
+
     // sort prefixL,suffixL,prefixR,suffixR
     lli prefixLastLeft  = sum[mid]-((low==0)?(0):(sum[low-1]));
     lli suffixLastRight = sum[high]-sum[mid];
@@ -67,7 +70,9 @@ void merger(lli* arr,int low,int mid,int high,int li,int hi){
     for(int i=mid+1;i<=high;i++){
         prefix[i] = prefix[i] + prefixLastLeft;
     }
+    // do a merger on prefix
     Imerger(prefix,low,mid,high);
+    // do a merger on suffix
     Imerger(suffix,low,mid,high);
     return;
 } 
@@ -82,6 +87,7 @@ void mergeSort(lli* arr,int low,int high,int li,int hi){
     mergeSort(arr,mid+1,high,li,hi);
     merger(arr,low,mid,high,li,hi);
 }
+
 int countRangeSum(int* nums, int numsSize, int lower, int upper) {
     count=0;
     sz=numsSize;
@@ -95,11 +101,25 @@ int countRangeSum(int* nums, int numsSize, int lower, int upper) {
     return count;
 }
 
+int main(){
+    int tt;
+    scanf("%d",&tt);
+}
+
 // Pictorial representation
 // |       |
 // ||     ||   
 // |||   |||
 // |||| ||||
 // prf   suf 
-// resetting back to last proper lower and upper indices 
+// binary Search
 // Sliding Window
+
+// https://leetcode.com/problems/data-stream-as-disjoint-intervals/description/
+// lowerPrefixR + higherSuffixL >=li 
+// https://leetcode.com/problems/count-of-range-sum/
+// https://leetcode.com/problems/data-stream-as-disjoint-intervals/description/
+
+// https://leetcode.com/problems/data-stream-as-disjoint-intervals/description/
+
+// https://leetcode.com/problems/data-stream-as-disjoint-intervals/description/
