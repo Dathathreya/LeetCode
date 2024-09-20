@@ -1,3 +1,40 @@
+// https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii
+#define N ((int)(1e5+5))
+#define Buy 0
+#define Sell 1 
+typedef long long int lli;
+lli dp[N][4][2];
+lli max(lli a,lli b){
+    return ((a>=b)?(a):(b));
+}
+int maxProfit(int* prices, int pricesSize) {
+    // at most 4 transactions with N days there 
+    int maxi = 0 , end = pricesSize , day = 0,choice=0;
+    // AtMost two transactions means 4 events with BSBS , Buy Sell
+    // E - B, O - S
+    memset(dp,0,sizeof(dp));
+    for(choice=0;choice<4;choice++)
+    {
+        for(day=choice;day<end;day++){
+            if((choice==0)||(day==0)){
+                dp[day][choice][Buy] = -prices[day];   
+                if(day>0){
+                    dp[day][choice][Buy] = max(dp[day][choice][Buy] ,dp[day-1][choice][Buy]  );   
+                }             
+            }
+            else{
+                dp[day][choice][Buy]  = dp[day-1][choice-1][Sell] - prices[day];
+                dp[day][choice][Sell] = dp[day-1][choice-1][Buy]  + prices[day];
+                if(day>choice) // updating the maximum should happen after the least point started taking current day
+                    dp[day][choice][Buy] = max(dp[day][choice][Buy] ,dp[day-1][choice][Buy]  );           
+                if(day>choice) // updating the maximum should happen after the least point started taking current day
+                    dp[day][choice][Sell] =  max(dp[day][choice][Sell] ,dp[day-1][choice][Sell]  );  
+            }          
+            maxi = max(dp[day][choice][Sell],maxi); // sell will always have maximum
+        }
+    }
+    return maxi;
+}
 // 188. Best Time to Buy and Sell Stock IV
 int dp[201][1001];
 int max(int a,int b){
