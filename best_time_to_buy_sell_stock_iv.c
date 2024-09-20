@@ -3,6 +3,44 @@ int dp[201][1001];
 int max(int a,int b){
     return ((a>=b)?(a):(b));
 }
+
+#define Buy 0 
+#define Sell 1
+#define N (int)3e5+1
+int dp2[N][2],maxSellAtEnd2[N],maxBuyAtEnd2[N];
+int max2(int a,int b){
+    return ((a>=b)?(a):(b));
+}
+int maxProfitII(int* prices, int pricesSize) {
+    int day = 0 , end = pricesSize ,maxi=0;
+    memset(dp,0,sizeof(dp));memset(maxSellAtEnd,0,sizeof(maxSellAtEnd));
+    memset(maxBuyAtEnd,0,sizeof(maxBuyAtEnd));
+    for(day=0;day<end;day++){
+        if(day<1){
+            dp[day][Buy] -= prices[day];
+            maxBuyAtEnd[day] = dp[day][Buy]; //direct - wrong answer 
+        }
+        else{
+            dp[day][Buy] = maxSellAtEnd[day-1] - prices[day];
+            dp[day][Sell] = max(maxBuyAtEnd[day-1] + prices[day],maxSellAtEnd[day-1]);
+            // selling at current day or we can buy and sell at current day with considering whatever max we get from previous
+            // selling at day-1
+             maxSellAtEnd[day] = max(maxSellAtEnd[day-1] ,dp[day][Sell]);
+             maxBuyAtEnd[day] = max(maxBuyAtEnd[day-1] ,dp[day][Buy]);
+        }
+        maxi = max(maxi,maxSellAtEnd[day]);  
+        maxi = max(maxi,maxBuyAtEnd[day]);       
+    }
+    //  for(day=0;day<end;day++){
+    //     printf("%d ",dp[day][Buy]);
+    //  }
+    //  putchar('\n');
+    //  for(day=0;day<end;day++){
+    //     printf("%d ",dp[day][Sell]);
+    //  }
+    //  putchar('\n');
+    return maxi;
+}
 int maxProfit(int k, int* prices, int pricesSize) {
         // B  S  B
         // k1 k2 k3    (100)
