@@ -7,6 +7,30 @@ lli dp[N][4][2];
 lli max(lli a,lli b){
     return ((a>=b)?(a):(b));
 }
+
+
+int maxProfit(int* prices, int pricesSize) {
+    // at most 4 transactions with N days there 
+    int maxi = 0 , end = pricesSize , day = 0,choice=0;
+    // AtMost two transactions means 4 events with BSBS , Buy Sell
+    memset(dp,0,sizeof(dp));
+    for(choice=0;choice<4;choice++)
+    {
+        for(day=choice;day<end;day++){
+            if(choice==0){ // works for all days as choice is only buy 
+                dp[day][choice] = -prices[day];
+            }
+            else{ // based on parity we choose whether its a buy or sell  + max at previous index 
+                dp[day][choice] = dp[day-1][choice-1] + ((choice&1)?(prices[day]):(-prices[day]));
+            }
+            if(day>choice){ // only after making a decision for first time we take prefix maximum 
+                 dp[day][choice]  = max(dp[day][choice],dp[day-1][choice]);  
+            }
+            maxi = max(dp[day][choice],maxi); // maximum of all 
+        }
+    }
+    return maxi; // maximum of all 
+}
 int maxProfit(int* prices, int pricesSize) {
     // at most 4 transactions with N days there 
     int maxi = 0 , end = pricesSize , day = 0,choice=0;
