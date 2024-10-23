@@ -1,3 +1,4 @@
+// https://leetcode.com/problems/find-maximum-removals-from-source-string/
 #include <stdio.h>
 #define N 3003
 #define C 2
